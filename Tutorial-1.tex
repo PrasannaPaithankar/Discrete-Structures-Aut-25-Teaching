@@ -2,7 +2,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage{titling}
 \usepackage[margin=1in]{geometry}
-
+\usepackage{amsmath}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\setlength{\parindent}{0pt}
 
 
 \title{\large Discrete Structures (CS21201) Autumn 2025\\ \vspace{0.5em} \LARGE Tutorial 1}
@@ -11,12 +16,225 @@
 \begin{document}
 \maketitle
 
-\subsection*{Question 1:}
+\subsection*{Question 1:} Given a set of natural numbers ranging from 1 to n, the task at hand is to determine the count of subsets of size k that possess a distinctive characteristic: there are more odd numbers than even numbers.
+
+\subsection*{Answer:}
+Let $O$ be the number of odd elements in $\{1,2,\dots,n\}$, and $E$ be the number of even elements. Then:
+\[
+O = \left\lceil \frac{n}{2} \right\rceil, \quad E = \left\lfloor \frac{n}{2} \right\rfloor.
+\]
+
+We want to count the number of subsets of size $k$ that contain more odd numbers than even numbers.
+
+Let $i$ be the number of odd elements in the subset. Since the total size is $k$, the number of even elements is $k - i$.
+
+We require:
+\[
+i > k - i \quad \Rightarrow \quad 2i > k \quad \Rightarrow \quad i > \left\lfloor \frac{k}{2} \right\rfloor.
+\]
+
+So the number of such subsets is:
+\[
+\sum_{i = \left\lfloor \frac{k}{2} \right\rfloor + 1}^{\min(k, O)} \binom{O}{i} \binom{E}{k - i}.
+\]
+
+\subsection*{Question 2:} How many binary strings of length n are there with exactly k occurrences of the pattern 10? Assume that $n\ge 2k$. 
+
+\subsection*{Answer:}
+All such strings are of the form:
+\[
+\begin{array}{cccccccccccccccc}
+1^{*} & 0^{*} & 01 & 1^{*} & 0^{*} & 01 & 1^{*} & 0^{*} & 01 & \cdots & 1^{*} & 0^{*} & 01 & 1^{*} & 0^{*} \\
+x_1   & x_2   & 2  & x_3   & x_4   & 2  & x_5   & x_6   & 2  & \cdots & x_{2k-1} & x_{2k} & 2 & x_{2k+1} & x_{2k+2}
+\end{array}
+\]
+
+So, we want to count the number of non-negative integer solutions to:
+\[
+x_1 + x_2 + 2 + x_3 + x_4 + 2 + x_5 + x_6 + 2 + \cdots + x_{2k-1} + x_{2k} + 2 + x_{2k+1} + x_{2k+2} = n,
+\]
+i.e.,
+\[
+x_1 + x_2 + \cdots + x_{2k+2} = n - 2k.
+\]
+
+So the number of solutions is:
+\[
+\binom{(n - 2k) + (2k + 2) - 1}{(2k + 2) - 1} = \binom{n + 1}{2k + 1}.
+\]
+
+
+\subsection*{Question 3:} Numbers ranging from 1 to 2n are arranged in a 2$\times$ n rectangular matrix, such that:
+\begin{itemize}
+    \item the elements in the columns are increasing. i.e. the element in the bottom row is greater than the cell above it.
+    \item the elements in the row are in increasing order.
+\end{itemize}
+
+Example matrix (n = 5):
+\[
+\begin{bmatrix}
+1 & 2 & 4 & 7 & 8 \\
+3 & 5 & 6 & 9 & 10
+\end{bmatrix}
+\]
+
+Compute the number of matrices satisfying the constraints in terms of n.
 
 \subsection*{Answer:}
 
-\subsection*{Question 2:}
+Any such matrix consists of a top row and a bottom row, together forming a partition of the numbers $1$ to $2n$.
+
+\begin{itemize}
+    \item Choose any $n$ of the $2n$ numbers to be in the top row. There are $\binom{2n}{n}$ ways to do this.
+    \item Sort both the top and bottom row in increasing order (only one way to do so).
+\end{itemize}
+
+So, initially we have $\binom{2n}{n}$ candidate matrices with increasing rows.
+
+Among the $\binom{2n}{n}$ matrices with increasing rows, we now want only those with increasing columns, i.e., the bottom entry in each column is greater than the top entry.
+
+This is equivalent to requiring that the sequence formed by labeling each number as $U$ (if it's in the top row) or $D$ (if in the bottom row) forms a Dyck path: a balanced sequence of $n$ $U$'s and $n$ $D$'s, where no prefix has more $D$'s than $U$'s.
+
+For each number in increasing order:
+\begin{itemize}
+    \item write $U$ if it's in the top row,
+    \item write $D$ if it's in the bottom row.
+\end{itemize}
+
+We get a word of length $2n$ with $n$ $U$'s and $n$ $D$'s.
+
+The column-increasing condition ensures that the $i$-th $U$ appears before the $i$-th $D$ (otherwise some bottom entry would be smaller than the top one in a column). This exactly means that the word is a Dyck path.
+
+
+The number of Dyck paths of length $2n$ (i.e., $n$ $U$'s and $n$ $D$'s, such that no prefix has more $D$'s than $U$'s) is exactly the $n$-th Catalan number:
+\[
+C_n = \frac{1}{n+1} \binom{2n}{n}
+\]
+
+\subsection*{Question 4:} Prove the following for all positive integers
+\begin{equation*}
+    \binom{2n}{n} = C(n) + \sum_{k=0}^{n-1} \binom{2n - 2k - 1}{n - k} \, C(k)
+\end{equation*}
+
+where $C(n)$ is the n'th Catalan number.
 
 \subsection*{Answer:}
+We consider all paths from $(0,0)$ to $(n,n)$ in the grid using only \texttt{R} (right) and \texttt{U} (up) moves. The total number of such paths is given by the binomial coefficient
+\[
+\binom{2n}{n},
+\]
+whereas $C(n)$ denotes the number of \emph{valid} Dyck paths — that is, paths that never cross the line $y = x$.
 
+Thus, the sum on the right-hand side of the identity should count the number of \emph{invalid} paths from $(0,0)$ to $(n,n)$. Consider any such invalid path. By definition, it must cross the line $y = x$ at least once.
+
+Let $k \in \{0, 1, 2, \dots, n - 1\}$ be the first instance where the path moves from $(k, k)$ to $(k, k+1)$ — that is, it steps \texttt{U} and goes above the line $y = x$ for the first time. Since this is the first such step, the portion of the path from $(0,0)$ to $(k,k)$ must be a valid Dyck path. The number of such paths is $C(k)$.
+
+Now, from $(k, k)$ the path takes a \texttt{U} step to $(k, k+1)$. From there, we can choose any path to reach $(n,n)$. This is a path from $(k, k+1)$ to $(n,n)$, using $(n-k)$ right steps and $(n-k-1)$ up steps, which can be chosen in
+\[
+\binom{2n - 2k - 1}{n - k}
+\]
+ways.
+
+Finally, summing over all allowed values of $k$ from $0$ to $n-1$, we obtain the number of invalid paths:
+\[
+\binom{2n}{n} = C(n) + \sum_{k=0}^{n-1} \binom{2n - 2k - 1}{n - k} \cdot C(k).
+\]
+
+\subsection*{Question 5:} You are given an n×n grid. You want to count the number of rectangles in the grid, in which the horizontal sides are larger than the vertical sides. The figure \ref{fig:1} shows the 11 possible such rectangles in a 3×3 grid.
+
+\begin{figure}[h!]
+\centering
+
+\newcommand{\gridrect}[4]{%
+\begin{subfigure}{0.085\textwidth}
+\centering
+\begin{tikzpicture}[scale=0.4]
+    \foreach \x in {0,1,2,3} \draw (\x,0) -- (\x,3);
+    \foreach \y in {0,1,2,3} \draw (0,\y) -- (3,\y);
+    \fill[gray] (#1,#2) rectangle (#3,#4);
+\end{tikzpicture}
+\end{subfigure}
+}
+
+\gridrect{0}{2}{2}{3}
+\gridrect{1}{2}{3}{3}
+\gridrect{0}{1}{2}{2}
+\gridrect{1}{1}{3}{2}
+\gridrect{0}{0}{2}{1}
+\gridrect{1}{0}{3}{1}
+\vspace{0.4cm}
+
+\gridrect{0}{2}{3}{3}
+\gridrect{0}{1}{3}{2}
+\gridrect{0}{0}{3}{1}
+\vspace{0.4cm}
+
+\gridrect{0}{1}{3}{3}
+\gridrect{0}{0}{3}{2}
+\caption{All 11 rectangles in a $3 \times 3$ grid where width $>$ height}
+\label{fig:1}
+\end{figure}
+
+Deduce a closed-form expression for the desired count (as a function of n).
+
+\subsection*{Answer:}
+Let $R_{>}, R_{=}, R_{<}$ denote the numbers of rectangles in an $n \times n$ grid whose horizontal sides are, respectively, larger than, equal to, and smaller than the vertical sides. Then the total number of rectangles is
+
+\[
+R = R_{>} + R_{=} + R_{<}.
+\]
+
+(Note: Squares are also treated as rectangles.)
+
+A rectangle in the grid is fully specified by choosing:
+
+- the coordinates $(i, j)$ of the bottom-left corner, and  
+- the coordinates $(k, \ell)$ of the top-right corner,
+
+such that:
+\[
+0 \leq i < k \leq n \quad \text{and} \quad 0 \leq j < \ell \leq n.
+\]
+
+The number of ways to choose $(i, k)$ with $i < k$ is $\binom{n+1}{2}$, and similarly for $(j, \ell)$. Therefore, the total number of rectangles is:
+
+\[
+R = \binom{n+1}{2}^2 = \left( \frac{n(n+1)}{2} \right)^2 = \frac{n^2(n+1)^2}{4}.
+\]
+
+
+There are:
+
+- $n^2$ squares of side 1,  
+- $(n-1)^2$ squares of side 2,  
+- $(n-2)^2$ squares of side 3,  
+- $\dots$,  
+- $1^2$ square of side $n$.
+
+So the total number of squares is:
+
+\[
+R_{=} = \sum_{k=1}^{n} k^2 = \frac{n(n+1)(2n+1)}{6}.
+\]
+
+
+By symmetry, the number of rectangles with width $>$ height equals the number with width $<$ height. Therefore:
+
+\[
+R_{>} = R_{<} = \frac{1}{2}(R - R_{=}).
+\]
+
+Substitute the expressions for $R$ and $R_{=}$:
+
+\begin{align*}
+R_{>} &= \frac{1}{2} \left( \frac{n^2(n+1)^2}{4} - \frac{n(n+1)(2n+1)}{6} \right) \\
+&= \frac{n(n+1)}{2} \left( \frac{3n(n+1) - 2(2n+1)}{12} \right) \\
+&= \frac{n(n+1)(n-1)(3n+2)}{24}
+\end{align*}
+
+\vspace{0.5cm}
+\noindent
+\textbf{Extras:}\\
+\href{https://www.mat.univie.ac.at/~slc/wpapers/FPSAC2017/39%20Borie.pdf}{3-D Catalan Numbers}\\
+Practice problems from Ralph Grimaldi
 \end{document}
