@@ -1,0 +1,184 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{titling}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{tikz}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[colorlinks=true, linkcolor=blue, urlcolor=blue]{hyperref}
+\setlength{\parindent}{0pt}
+
+
+\title{\large Discrete Structures (CS21201) Autumn 2025\\ \vspace{0.5em} \LARGE Tutorial 6: Sets \& Relations}
+\date{15th September 2025}
+
+\begin{document}
+\maketitle
+
+\subsection*{Question 1}
+Define two relations $\rho$ and $\sigma$ on $\mathbb{R}$ as follows.  
+\begin{enumerate}
+    \item $a \,\rho\, b$ if and only if $a - b \in \mathbb{Q}$.
+    \item $a \,\sigma\, b$ if and only if $a - b \in \mathbb{Z}$.
+\end{enumerate}
+
+Prove that $\rho$ and $\sigma$ are equivalence relations on $\mathbb{R}$. Also, find the equivalence classes (with representatives).
+
+\subsection*{Answer}
+[Reflexive:]  
+For any $a \in \mathbb{R}$, $a - a = 0$. Since $0 \in \mathbb{Q}$ and $0 \in \mathbb{Z}$, both relations are reflexive.
+
+\medskip
+[Symmetric:]  
+If $a - b$ is rational (or integer), then $b - a = -(a - b)$ is also rational (or integer). Hence, both relations are symmetric.
+
+\medskip
+[Transitive:] 
+If $a - b$ and $b - c$ are rational (or integer), then
+\[
+a - c = (a - b) + (b - c)
+\]
+is again rational (or integer). Hence, both relations are transitive.
+
+\medskip
+Thus, $\rho$ and $\sigma$ are equivalence relations.
+
+\medskip
+Equivalence Classes:
+\begin{enumerate}
+    \item Under $\rho$:  
+    The equivalence class of $x$ is $
+    [x]_\rho = \{\, x + r : r \in \mathbb{Q} \,\}.
+    $
+
+    \item Under $\sigma$:  
+    The equivalence class of $y$ is $
+    [y]_\sigma = \{\, y + s : s \in \mathbb{Z} \,\}.
+    $
+\end{enumerate}
+
+We can choose a unique element in the interval [0,1) as a representative of each equivalence class of $\sigma$. For $\rho$
+however, identifying representatives in a mathematically rigorous way is not possible. If you assume the axiom
+of choice, then all you can say is that a unique representative from each equivalence class can be chosen. Such
+a choice of unique representatives from the equivalence classes gives us a set called a Vitali set.
+
+
+\subsection*{Question 2}
+Let $A$ be a poset under the relation $\rho$. Prove or disprove:
+\begin{enumerate}
+    \item If $\rho$ is a total order, then $A$ is a lattice.
+    \item If $A$ is a lattice, then $\rho$ is a total order.
+\end{enumerate}
+
+\subsection*{Answer}
+\begin{enumerate}
+    \item \textbf{True.}  
+    Suppose $(A,\rho)$ is a total order. That means for every $x,y\in A$ either $x\leq y$ or $y\leq x$.  
+    For any two elements $x,y$ define
+    \[
+    x\wedge y := \min\{x,y\}, \qquad x\vee y := \max\{x,y\}.
+    \]
+    Since $x$ and $y$ are comparable, both the minimum and maximum exist in $A$. Clearly, $x\wedge y$ is the greatest lower bound of $\{x,y\}$ and $x\vee y$ is the least upper bound of $\{x,y\}$.  
+    Hence every pair has a meet and a join, so $A$ is a lattice.
+
+    \item \textbf{False.}  
+    Being a lattice only requires that every pair of elements has a meet and a join, not that all elements are comparable.  
+
+    \medskip
+    \textit{Counterexample:}  
+    Take $A=\mathcal{P}(\{1,2\})=\{\varnothing,\{1\},\{2\},\{1,2\}\}$ with the order $\subseteq$.  
+    - Meets are intersections, joins are unions, so every pair has both. Thus $A$ is a lattice.  
+    - But $\{1\}$ and $\{2\}$ are incomparable (neither is a subset of the other). Hence $\rho$ is not a total order.  
+
+    Therefore, a lattice need not be totally ordered.
+\end{enumerate}
+
+
+\subsection*{Question 3}
+Let $k \in \mathbb{N}$, $S = \{1,2,\dots, k\}$, and $A = \mathcal{P}(S) \setminus \{\varnothing\}$, where $\mathcal{P}(S)$ denotes the power set of $S$. In other words,
+the set $A$ consists of all non-empty subsets of $\{1,2,\dots, k\}$. For each $a \in A$, denote by $\min(a)$ the smallest
+element of $a$ (notice that here $a$ is a set).
+
+\begin{enumerate}
+    \item Define a relation $\rho$ on $A$ as follows: $a \,\rho\, b$ if and only if $\min(a) = \min(b)$. Prove that $\rho$ is an equivalence
+    relation on $A$.  
+
+    \textbf{Answer:}\\
+    Reflexive: For any $a \in A$ we have $\min(a) = \min(a)$.\\
+    Symmetric: For any $a,b \in A$, if $\min(a) = \min(b)$, then $\min(b) = \min(a)$.\\
+    Transitive: For any $a,b,c \in A$, if $\min(a) = \min(b)$ and $\min(b) = \min(c)$, then $\min(a) = \min(c)$.  
+
+    \item What is the size of the quotient set $A/\rho$?  
+
+    \textbf{Answer:}\\
+    Any two non-empty subsets of $S$ having the same minimum element are related. On the other hand, two subsets
+    of $S$ having different minimum elements are not related. Therefore, the equivalence classes of $\rho$ have a one-to-one correspondence with elements of $S$ (the minimum element of every member in the class). Since $S$ contains
+    $k$ elements, there are exactly $k$ equivalence classes, that is, the size of $A/\rho$ is $k$.  
+
+    \item Define a relation $\sigma$ on $A$ as follows: $a \,\sigma\, b$ if and only if either $a = b$ or $\min(a) < \min(b)$. Prove that
+    $\sigma$ is a partial order on $A$.  
+
+    \textbf{Answer:}\\
+    Reflexive: By definition, every element is related to itself.\\ 
+    Antisymmetric: Take two elements $a,b \in A$. Suppose that $a \,\sigma\, b$ and $b \,\sigma\, a$. If $a \neq b$, then by definition,
+    $\min(a) < \min(b)$ and $\min(b) < \min(a)$, which is impossible. So we must have $a = b$.\\
+    Transitive: Suppose $a \,\sigma\, b$ and $b \,\sigma\, c$ for some $a,b,c \in A$. If $a = b$ or $b = c$, then clearly $a \,\sigma\, c$. So suppose
+    that $a \neq b$ and $b \neq c$. But then, $\min(a) < \min(b)$ and $\min(b) < \min(c)$. This implies that $\min(a) < \min(c)$, that
+    is, $a \,\sigma\, c$.  
+
+    \item Is $\sigma$ also a total order on $A$?  
+
+    \textbf{Answer:}\\
+    No! Take $k > 2$. The sets $\{1\}$ and $\{1,2\}$ are distinct, but have the same minimum element, and are therefore
+    not comparable.  
+\end{enumerate}
+
+
+\subsection*{Question 4}
+Give an example of a poset $A$ and a non-empty subset $S$ of $A$ such that $S$ has lower bounds in $A$, but $\operatorname{glb}(S)$ does not exist.  
+
+\subsection*{Answer}
+Take $A = \mathbb{Q}$ under the standard $<$ on rational numbers. Also take $S = \{x \in \mathbb{Q} \mid x^2 > 2\}$. Every rational number $< \sqrt{2}$ is a lower bound on $S$. Since $\sqrt{2}$ is irrational, $\operatorname{glb}(S)$ does not exist.  
+
+Another example: Take $A$ to be the set of all irrational numbers between $1$ and $5$, and $S$ to be the set of all irrational numbers between $2$ and $3$.  
+
+A simpler (but synthetic) example: Take $A = \{a,b,c,d\}$ and the relation on $A$ as,  
+\[
+\rho = \{(a,a),(a,c),(a,d),(b,b),(b,c),(b,d),(c,c),(d,d)\}
+\]  
+The subset $S = \{c,d\}$ of $A$ has two lower bounds $a$ and $b$, but these bounds are not comparable to one another.
+
+\subsection*{Question 5}
+Let \(k\) be a fixed positive integer. Define a relation \(\le\) on \(A=\mathbb{Z}^k\) by
+\[
+(a_1,a_2,\dots,a_k)\le (b_1,b_2,\dots,b_k)\quad\text{iff}\quad a_i\le b_i\ \text{for all }i=1,2,\dots,k.
+\]
+Prove that \(A\) is a lattice under this relation.
+
+\subsection*{Answer}
+First note that \(\le\) is a partial order on \(\mathbb{Z}^k\): it is reflexive, antisymmetric and transitive by checking those properties coordinate-wise.
+
+For any two elements \(\mathbf{a}=(a_1,\dots,a_k)\) and \(\mathbf{b}=(b_1,\dots,b_k)\) in \(\mathbb{Z}^k\) define
+\[
+\mathbf{a}\wedge\mathbf{b}:=(\min(a_1,b_1),\min(a_2,b_2),\dots,\min(a_k,b_k)),
+\]
+\[
+\mathbf{a}\vee\mathbf{b}:=(\max(a_1,b_1),\max(a_2,b_2),\dots,\max(a_k,b_k)).
+\]
+
+We show \(\mathbf{a}\wedge\mathbf{b}\) is the greatest lower bound of \(\{\mathbf{a},\mathbf{b}\}\).  \\
+- \emph{Lower bound:} For each coordinate \(i\) we have \(\min(a_i,b_i)\le a_i\) and \(\min(a_i,b_i)\le b_i\). Hence \(\mathbf{a}\wedge\mathbf{b}\le\mathbf{a}\) and \(\mathbf{a}\wedge\mathbf{b}\le\mathbf{b}\).  \\
+- \emph{Greatest:} If \(\mathbf{z}=(z_1,\dots,z_k)\) is any lower bound of \(\{\mathbf{a},\mathbf{b}\}\), then for every \(i\) we have \(z_i\le a_i\) and \(z_i\le b_i\), so \(z_i\le\min(a_i,b_i)\). Thus \(\mathbf{z}\le\mathbf{a}\wedge\mathbf{b}\). Therefore \(\mathbf{a}\wedge\mathbf{b}\) is the greatest lower bound.
+\\
+
+Similarly we show \(\mathbf{a}\vee\mathbf{b}\) is the least upper bound of \(\{\mathbf{a},\mathbf{b}\}\).  \\
+- \emph{Upper bound:} For each \(i\), \(a_i\le\max(a_i,b_i)\) and \(b_i\le\max(a_i,b_i)\), so \(\mathbf{a}\le\mathbf{a}\vee\mathbf{b}\) and \(\mathbf{b}\le\mathbf{a}\vee\mathbf{b}\).\\  
+- \emph{Least:} If \(\mathbf{u}=(u_1,\dots,u_k)\) is any upper bound of \(\{\mathbf{a},\mathbf{b}\}\), then for every \(i\) we have \(a_i\le u_i\) and \(b_i\le u_i\), hence \(\max(a_i,b_i)\le u_i\). Thus \(\mathbf{a}\vee\mathbf{b}\le\mathbf{u}\). Therefore \(\mathbf{a}\vee\mathbf{b}\) is the least upper bound.\\
+
+Since every pair in \(\mathbb{Z}^k\) has both a meet and a join with respect to \(\le\), the poset \((\mathbb{Z}^k,\le)\) is a lattice.
+
+
+\end{document}
